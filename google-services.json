@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "579239309476",
+    "firebase_url": "https://innovation-crunch-time-efa17.firebaseio.com",
+    "project_id": "innovation-crunch-time-efa17",
+    "storage_bucket": "innovation-crunch-time-efa17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:579239309476:android:8c5b2b7eaa48748f",
+        "android_client_info": {
+          "package_name": "fr.utbm.innovCrunchTime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "579239309476-cb8cnjvha7cndlav7tb7etofioc59sh5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB34nwR1zPyV0idCic8IOtEBSquIlf1WrY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

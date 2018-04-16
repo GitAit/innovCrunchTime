@@ -27,7 +27,16 @@ export class User {
 @Injectable()
 export class AuthServiceProvider {
 	currentUser: User;
-  loginUrl="http://uca-notes.uca.local/uca_notes/innovCrunchTime/Login.php";
+  public data: any;
+
+  // apiUrl="http://uca-notes.uca.local/uca_notes/innovCrunchTime/";
+  apiUrl="https://tough-vampirebat-53.localtunnel.me/uca_notes/innovCrunchTime/";
+
+  loginUrl=this.apiUrl+"Login.php";
+  updateTokenUrl=this.apiUrl+"updateToken.php";
+  sendNotifUrl=this.apiUrl+"SendNotification.php";
+  deleteNotifUrl=this.apiUrl+"DeleteNotification.php";
+  notifsUrl=this.apiUrl+"ReceivedNotifications.php";
 
   public login(credentials) {
 
@@ -37,7 +46,7 @@ export class AuthServiceProvider {
       return Observable.create(observer => {
         // At this point make a request to your backend!
 
-        var deviceToken = "FAKE$76Adw8ccohB7RokPOHdy8.g2Q0gmfHonMfCO1K5fmmo.q.uuvBeZO";
+        var deviceToken = localStorage.getItem("deviceToken");
 
         var creds = "identifier=" + credentials.identifier + "&password=" + credentials.password+"&deviceToken=" + deviceToken;
 
@@ -49,7 +58,7 @@ export class AuthServiceProvider {
 		        .subscribe(data => {
 		                    console.log('login API success');
 		                    console.log(data.json());
-		                    observer.next(false);
+		                    observer.next(data.json());
 		                    observer.complete();
 		                }, error => {
 		                    console.log(JSON.stringify(error.json()));
@@ -58,6 +67,102 @@ export class AuthServiceProvider {
 		        });
       });
     }
+  }
+
+  updateToken(token, deviceToken) {
+    return Observable.create(observer => {
+      // At this point make a request to your backend!
+
+      var creds = "token=" + token + "&deviceToken=" + deviceToken;
+
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+      this.http
+          .post(this.updateTokenUrl, creds, { headers: headers })
+          .subscribe(data => {
+                      console.log('updateToken API success');
+                      console.log(data.json());
+                      observer.next(true);
+                      observer.complete();
+                  }, error => {
+                      console.log(JSON.stringify(error.json()));
+                      observer.next(false);
+                      observer.complete();
+          });
+    });
+  }
+
+  sendNotification(token, receiver_id) {
+    return Observable.create(observer => {
+      // At this point make a request to your backend!
+
+      var creds = "authToken=" + token + "&receiver_id=" + receiver_id;
+
+      console.log('Notif Params : '+creds);
+
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+      this.http 
+          .post(this.sendNotifUrl, creds, { headers: headers })
+          .subscribe(data => {
+                      console.log('Sent Notif API success');
+                      console.log(data.json());
+                      observer.next(true);
+                      observer.complete();
+                  }, error => {
+                      console.log("Error : "+error);
+                      observer.next(false);
+                      observer.complete();
+          });
+    });
+  }
+
+  deleteNotification(token, notif_id) {
+    return Observable.create(observer => {
+      // At this point make a request to your backend!
+
+      var creds = "authToken=" + token + "&notif_id=" + notif_id;
+
+      console.log('Delete Notif Params : '+creds);
+
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+      this.http 
+          .post(this.deleteNotifUrl, creds, { headers: headers })
+          .subscribe(data => {
+                      console.log('Delete Notif API success');
+                      console.log(data.json());
+                      observer.next(true);
+                      observer.complete();
+                  }, error => {
+                      console.log("Error : "+error);
+                      observer.next(false);
+                      observer.complete();
+          });
+    });
+  }
+
+  loadNotifications() {
+
+    var notifsUrlParams = "?authToken="+localStorage.getItem("authToken");
+
+    console.log("Notifs URL Params : "+notifsUrlParams);
+
+    return Observable.create(observer => {
+      this.http.get(this.notifsUrl+notifsUrlParams)
+        .map(res => res.json())
+        .subscribe(data => {
+          // we've got back the raw data, now generate the core schedule data
+          // and save the data for later reference
+          // console.log("Notifs : "+data);
+          this.data = data;
+          observer.next(data);
+          observer.complete();
+        });
+    });
   }
 
   public getUserInfo() : User {

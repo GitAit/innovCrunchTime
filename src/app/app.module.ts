@@ -6,18 +6,23 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
+import { ExpertHomePage } from '../pages/expert-home/expert-home';
 
 import { HttpModule } from '@angular/http';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
+import { ExpertServiceProvider } from '../providers/expert-service/expert-service';
+
+import { FCM } from '@ionic-native/fcm';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ListPage,
-    LoginPage
+    LoginPage,
+    ExpertHomePage
   ],
   imports: [
     BrowserModule,
@@ -29,13 +34,16 @@ import { AuthServiceProvider } from '../providers/auth-service/auth-service';
     MyApp,
     HomePage,
     ListPage,
-    LoginPage
+    LoginPage,
+    ExpertHomePage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthServiceProvider
+    AuthServiceProvider,
+    ExpertServiceProvider,
+    FCM
   ]
 })
 export class AppModule {}

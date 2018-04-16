@@ -1,15 +1,24 @@
 page-login {
  
   .login-content {
-    background: #56CA96;
+    background: #92dfea;
+
+    .logo-col {
+      width: 70%;
+      flex-basis: auto;
+    }
  
     .logo-row {
-      padding-top: 50px;
+      padding-top: 20px;
       padding-bottom: 20px;
+
+      img {
+        margin-bottom: 10px;
+      }
     }
  
     .login-box {
-      background: #399F8B;
+      background: #84c4ce;
       padding: 20px 20px 0px 20px;
       margin-top: 30px;
     }
@@ -40,9 +49,17 @@ page-login {
      }
  
      .submit-btn {
-       background: #51CFB1;
+       background: #ed5d1d;
        border-radius: 30px !important;
        border: 1px solid #ffffff;
+
+       &:hover {
+        background: #84c4ce;
+       }
+
+       &:active {
+        background: #84c4ce;
+       }
      }
  
      .register-btn {

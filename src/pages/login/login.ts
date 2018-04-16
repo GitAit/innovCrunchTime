@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import { HomePage } from '../home/home';
+import { ExpertHomePage } from '../expert-home/expert-home';
 
 /**
  * Generated class for the LoginPage page.
@@ -25,9 +26,19 @@ export class LoginPage {
 
   public login() {
     this.showLoading()
-    this.auth.login(this.authCredentials).subscribe(allowed => {
-      if (allowed) {        
+    this.auth.login(this.authCredentials).subscribe(data => {
+      if (data.identifier && data.token) {
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('identifier', data.identifier);
+        localStorage.setItem('name', data.name);
+        localStorage.setItem('profile', data.profile);
+
         this.navCtrl.setRoot(HomePage);
+        
+      } else if (!data.identifier) { 
+        this.showError("Identifiant incorrect!!");
+      } else if (!data.token) { 
+        this.showError("Mot de passe incorrect!!");
       } else {
         this.showError("Accès Refusé");
       }

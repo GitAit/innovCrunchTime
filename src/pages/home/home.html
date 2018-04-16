@@ -3,16 +3,45 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Home</ion-title>
+    <ion-title>{{pageTitle}}</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h3>Ionic Menu Starter</h3>
+<ion-content>
+  <ion-list *ngFor="let expertGroup of experts; let i = index;" class="list-expert-page">
 
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-  </p>
+    <ion-list-header class="custom-header">{{skills[i]}}</ion-list-header>
+    <ion-item-sliding *ngFor="let expert of expertGroup" #slidingItem>
+      <ion-item>
+        <h2>{{expert.name}}</h2>
 
-  <button ion-button secondary menuToggle>Toggle Menu</button>
+        <div class="item-note" item-end>
+          Zone : {{expert.zone}}
+        </div>
+      </ion-item>
+      <ion-item-options side="left">
+        <button ion-button color="secondary" (click)="expertSelected(slidingItem, expert)" class="green-btn">
+          <ion-icon name="paper-plane"></ion-icon>
+          Demander
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-list *ngIf="notifications" class="list-notif-page">
+    <ion-item-sliding *ngFor="let notification of notifications; let i = index;">
+      <ion-item>
+        <h2>{{notification.group_id}}</h2>
+        <h3>Zone : {{notification.group_zone}}</h3>
+
+        <ion-note item-end>{{changeDateFormat(notification.sent_at)}}</ion-note>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button color="danger" (click)="deleteNotif(notification, i)">
+          <ion-icon name="trash"></ion-icon>
+          Supprimer
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>
