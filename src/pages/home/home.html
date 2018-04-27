@@ -1,47 +1,82 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle>
+    <button ion-button menuToggle no-border-bottom>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>{{pageTitle}}</ion-title>
   </ion-navbar>
+
+  <ion-toolbar no-border-top *ngIf="profile=='expert'">
+    <ion-segment [(ngModel)]="notifSwitch">
+      <ion-segment-button value="actives">
+        Actives
+      </ion-segment-button>
+      <ion-segment-button value="archived">
+        Archivées
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list *ngFor="let expertGroup of experts; let i = index;" class="list-expert-page">
 
-    <ion-list-header class="custom-header">{{skills[i]}}</ion-list-header>
-    <ion-item-sliding *ngFor="let expert of expertGroup" #slidingItem>
-      <ion-item>
-        <h2>{{expert.name}}</h2>
+  <ng-container *ngIf="profile=='group'">
+    <ion-list *ngFor="let expertGroup of experts; let i = index;" class="list-expert-page">
 
-        <div class="item-note" item-end>
-          Zone : {{expert.zone}}
-        </div>
-      </ion-item>
-      <ion-item-options side="left">
-        <button ion-button color="secondary" (click)="expertSelected(slidingItem, expert)" class="green-btn">
-          <ion-icon name="paper-plane"></ion-icon>
-          Demander
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
+      <ion-list-header class="custom-header" (click)="showRadio()">{{skills[i]}}</ion-list-header>
+<!--       <ion-item-sliding *ngFor="let expert of expertGroup" #slidingItem>
+        <ion-item>
+          <h2>{{expert.name}}</h2>
 
-  <ion-list *ngIf="notifications" class="list-notif-page">
-    <ion-item-sliding *ngFor="let notification of notifications; let i = index;">
-      <ion-item>
-        <h2>{{notification.group_id}}</h2>
-        <h3>Zone : {{notification.group_zone}}</h3>
+          <div class="item-note" item-end>
+            Zone : {{expert.zone}}
+          </div>
 
-        <ion-note item-end>{{changeDateFormat(notification.sent_at)}}</ion-note>
-      </ion-item>
-      <ion-item-options side="right">
-        <button ion-button color="danger" (click)="deleteNotif(notification, i)">
-          <ion-icon name="trash"></ion-icon>
-          Supprimer
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
+        </ion-item>
+        <ion-item-options side="left">
+          <button ion-button color="secondary" (click)="expertSelected(slidingItem, expert)" class="green-btn">
+            <ion-icon name="paper-plane"></ion-icon>
+            Demander
+          </button>
+        </ion-item-options>
+      </ion-item-sliding> -->
+    </ion-list>
+
+  </ng-container>
+
+  <ng-container *ngIf="profile=='expert'">
+
+    <div [ngSwitch]="notifSwitch">
+      <ion-list class="list-notif-page" *ngSwitchCase="'actives'">
+        <ion-item-sliding *ngFor="let notification of notifications; let i = index;">
+          <ion-item>
+            <h2>{{notification.group_id}}</h2>
+            <h3>Zone : {{notification.group_zone}}</h3>
+
+            <ion-note item-end>{{changeDateFormat(notification.sent_at)}}</ion-note>
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="danger" (click)="deleteNotif(notification, i)">
+              <ion-icon name="trash"></ion-icon>
+              Supprimer
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+
+      <ion-list class="list-notif-page ar-notif" *ngSwitchCase="'archived'">
+        <ion-item-sliding *ngFor="let notification of archivedNotifications; let i = index;">
+          <ion-item>
+            <h2>{{notification.group_id}}</h2>
+            <h3>Zone : {{notification.group_zone}}</h3>
+
+            <ion-note item-end>{{changeDateFormat(notification.sent_at)}}</ion-note>
+          </ion-item>
+
+        </ion-item-sliding>
+      </ion-list>
+    </div>
+
+  </ng-container>
+
 </ion-content>

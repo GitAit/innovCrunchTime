@@ -8,6 +8,19 @@ page-home {
 	    color: #e6330b;
 	  }
 
+		ion-item-sliding {
+			border-right: 5px solid #f53d3d;
+  		margin-bottom: 2px;
+		}
+
+		&.ar-notif ion-item-sliding {
+			border-right: 0;
+		}
+
+		.arrow-icon {
+			color: #d4d4d4;
+		}
+
 		.item-wrapper {
 
 			.item-md {
@@ -53,11 +66,22 @@ page-home {
 		    }
 			}
 		}
+
+		ion-item-sliding {
+			border-left: 5px solid #34d293;
+	    margin-bottom: 2px;
+		}
+		.arrow-icon {
+			color: #d4d4d4;
+		}
 	}
 
 	.green-btn {
 		background-color: #34d293;
 	}
 
+	.list-header-md {
+		margin-bottom: 0;
+	}
 
 }

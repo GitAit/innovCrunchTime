@@ -30,13 +30,16 @@ export class AuthServiceProvider {
   public data: any;
 
   // apiUrl="http://uca-notes.uca.local/uca_notes/innovCrunchTime/";
-  apiUrl="https://tough-vampirebat-53.localtunnel.me/uca_notes/innovCrunchTime/";
+  // apiUrl="https://brave-bobcat-45.localtunnel.me/uca_notes/innovCrunchTime/";
+  apiUrl="https://ucastudent.uca.ma/innovCrunchTime/";
 
   loginUrl=this.apiUrl+"Login.php";
   updateTokenUrl=this.apiUrl+"updateToken.php";
   sendNotifUrl=this.apiUrl+"SendNotification.php";
-  deleteNotifUrl=this.apiUrl+"DeleteNotification.php";
+  deleteNotifUrl=this.apiUrl+"ArchiveNotification.php";
   notifsUrl=this.apiUrl+"ReceivedNotifications.php";
+  archivedNotifsUrl=this.apiUrl+"ArchivedNotifications.php";
+  logoutUrl=this.apiUrl+"Logout.php";
 
   public login(credentials) {
 
@@ -82,6 +85,30 @@ export class AuthServiceProvider {
           .post(this.updateTokenUrl, creds, { headers: headers })
           .subscribe(data => {
                       console.log('updateToken API success');
+                      console.log(data.json());
+                      observer.next(true);
+                      observer.complete();
+                  }, error => {
+                      console.log(JSON.stringify(error.json()));
+                      observer.next(false);
+                      observer.complete();
+          });
+    });
+  }
+
+  logout(token) {
+    return Observable.create(observer => {
+      // At this point make a request to your backend!
+
+      var creds = "token=" + token;
+
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+      this.http
+          .post(this.logoutUrl, creds, { headers: headers })
+          .subscribe(data => {
+                      console.log('Logout API success');
                       console.log(data.json());
                       observer.next(true);
                       observer.complete();
@@ -165,17 +192,37 @@ export class AuthServiceProvider {
     });
   }
 
+  loadArchivedNotifications() {
+
+    var notifsUrlParams = "?authToken="+localStorage.getItem("authToken");
+
+    console.log("Notifs URL Params : "+notifsUrlParams);
+
+    return Observable.create(observer => {
+      this.http.get(this.archivedNotifsUrl+notifsUrlParams)
+        .map(res => res.json())
+        .subscribe(data => {
+          // we've got back the raw data, now generate the core schedule data
+          // and save the data for later reference
+          // console.log("Notifs : "+data);
+          this.data = data;
+          observer.next(data);
+          observer.complete();
+        });
+    });
+  }
+
   public getUserInfo() : User {
     return this.currentUser;
   }
 
-  public logout() {
-    return Observable.create(observer => {
-      this.currentUser = null;
-      observer.next(true);
-      observer.complete();
-    });
-  }
+  // public logout() {
+  //   return Observable.create(observer => {
+  //     this.currentUser = null;
+  //     observer.next(true);
+  //     observer.complete();
+  //   });
+  // }
 
   constructor(public http: Http) {
     console.log('Hello AuthServiceProvider Provider');

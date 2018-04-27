@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, ToastController } from 'ionic-angular';
+import { Nav, Platform, ToastController, Events, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -20,13 +20,15 @@ export class MyApp {
 
   rootPage: any;
 
+  homePage: HomePage;
+
   pages: Array<{title: string, component: any}>;
 
   isLoggedIn: boolean = false;
 
   homeTitle: any = "Accueil";
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private toastCtrl: ToastController, private auth: AuthServiceProvider, private fcm: FCM) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private toastCtrl: ToastController, private auth: AuthServiceProvider, private fcm: FCM, public events: Events, private alertCtrl: AlertController) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -70,11 +72,22 @@ export class MyApp {
         FCMPlugin.onNotification(function(data){
             if(data.wasTapped){
               //Notification was received on device tray and tapped by the user.
-              that.nav.setRoot(HomePage);
+
+              if (localStorage.getItem("profile")=="expert") { 
+                that.events.publish('notif:received', data.body);
+              }
+              
+              // that.nav.setRoot(HomePage);
+
             }else{
               //Notification was received in foreground. Maybe the user needs to be notified.
               // alert( JSON.stringify(data) );
               // that.showToast(JSON.stringify(data));
+
+              if (localStorage.getItem("profile")=="expert") { 
+                that.showNotification(data.body);
+              }
+
             }
           },
           function(msg){ //success handler
@@ -111,6 +124,20 @@ export class MyApp {
     toast.present();
   }
 
+  showNotification(text) {
+ 
+    let alert = this.alertCtrl.create({
+      title: 'Notification',
+      subTitle: text,
+      buttons: ['OK']
+    });
+    alert.present(alert);
+
+    this.events.publish('notif:received', text);
+
+    // this.homePage.loadNotifications();
+  }
+
   updateToken(token, deviceToken) {
     this.auth.updateToken(token, deviceToken).subscribe(data => {
        console.log('Token updated');
@@ -122,8 +149,17 @@ export class MyApp {
   }
 
   logout() {
-    localStorage.removeItem('authToken');
+
+    this.auth.logout(localStorage.getItem("authToken")).subscribe(data => {
+       console.log('Logged Out');
+    },
+      error => {
+        // this.showError(error);
+        console.log('Error logout');
+      });
     
+    localStorage.removeItem('authToken');
+
     this.nav.setRoot(LoginPage);
 
     // this.authServiceProvider.logout().then((result) => {
