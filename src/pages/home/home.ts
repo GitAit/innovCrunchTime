@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, LoadingController, Loading, AlertController, ItemSliding, Events } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, Loading, AlertController, ItemSliding, Events } from 'ionic-angular';
 import { LoginPage } from '../login/login';
 import { ExpertServiceProvider } from '../../providers/expert-service/expert-service';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
-import { ExpertHomePage } from '../expert-home/expert-home';
+import { SkillExpertsPage } from '../skill-experts/skill-experts';
 
 @Component({
   selector: 'page-home',
@@ -15,7 +15,8 @@ export class HomePage {
 	isLoggedIn: boolean = false;
 	profile: any;
 	pageTitle: any = "Home";
-	notifSwitch: any = "actives";
+  notifSwitch: any = "actives";
+	notifsCount: any = 0;
 	public skills: any;
 	public experts: any;
 	public notifications: any;
@@ -68,6 +69,7 @@ export class HomePage {
   	this.showLoading();
     this.auth.loadNotifications().subscribe(data => {
       this.notifications = data;
+      this.notifsCount = this.notifications.length;
       this.dismissLoading();
     },
       error => {
@@ -118,55 +120,9 @@ export class HomePage {
     alert.present(alert);
   }
 
-  expertSelected(slidingItem: ItemSliding, item) {
-  	console.log('Selected : ', item.id);
-  	slidingItem.close();
-
-  	var token = localStorage.getItem("authToken");
-
-    this.auth.sendNotification(token, item.id).subscribe(data => {
-      console.log("Sent Notification : "+data);
-    },
-      error => {
-        // this.showError(error);
-        console.log(error);
-      });
-
-    // this.navCtrl.push(ListPage, {
-    //   item: item
-    // });
+  openSkillExpertsPage(item, experts) {
+    this.navCtrl.push(SkillExpertsPage, { skill: item, experts: experts });
   }
-
-    showRadio() {
-      let alert = this.alertCtrl.create();
-      alert.setTitle('Web');
-
-      alert.addInput({
-        type: 'radio',
-        label: 'Hassan (Zone: A)',
-        value: 'blue',
-        checked: false
-      });
-
-      alert.addInput({
-        type: 'radio',
-        label: 'Zouhair (Zone: B)',
-        value: 'blue',
-        checked: false
-      });
-
-      alert.addButton('Annuler');
-      alert.addButton({
-        text: 'OK',
-        handler: data => {
-          // this.testRadioOpen = false;
-          // this.testRadioResult = data;
-        }
-      });
-      alert.present();
-
-      // this.navCtrl.setRoot(ExpertHomePage);
-    }
 
   changeDateFormat(dateString) {
     let dateArr = dateString.split(" ", 2);

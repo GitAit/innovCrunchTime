@@ -6,6 +6,10 @@ page-login {
     .logo-col {
       width: 70%;
       flex-basis: auto;
+
+      .logo-img {
+        max-width: 50%;
+      }
     }
  
     .logo-row {

@@ -85,7 +85,8 @@ export class MyApp {
               // that.showToast(JSON.stringify(data));
 
               if (localStorage.getItem("profile")=="expert") { 
-                that.showNotification(data.body);
+                that.events.publish('notif:received', data.body);
+                // that.showNotification(data.body);
               }
 
             }

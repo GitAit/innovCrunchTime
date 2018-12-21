@@ -4,6 +4,12 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>{{pageTitle}}</ion-title>
+
+    <ion-buttons *ngIf="profile=='expert'" end>
+      <button ion-button color="royal">
+        <ion-badge color="danger" item-end>{{notifsCount}}</ion-badge>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
   <ion-toolbar no-border-top *ngIf="profile=='expert'">
@@ -23,23 +29,8 @@
   <ng-container *ngIf="profile=='group'">
     <ion-list *ngFor="let expertGroup of experts; let i = index;" class="list-expert-page">
 
-      <ion-list-header class="custom-header" (click)="showRadio()">{{skills[i]}}</ion-list-header>
-<!--       <ion-item-sliding *ngFor="let expert of expertGroup" #slidingItem>
-        <ion-item>
-          <h2>{{expert.name}}</h2>
+      <ion-list-header class="custom-header" (click)="openSkillExpertsPage(skills[i], expertGroup)">{{skills[i]}}</ion-list-header>
 
-          <div class="item-note" item-end>
-            Zone : {{expert.zone}}
-          </div>
-
-        </ion-item>
-        <ion-item-options side="left">
-          <button ion-button color="secondary" (click)="expertSelected(slidingItem, expert)" class="green-btn">
-            <ion-icon name="paper-plane"></ion-icon>
-            Demander
-          </button>
-        </ion-item-options>
-      </ion-item-sliding> -->
     </ion-list>
 
   </ng-container>

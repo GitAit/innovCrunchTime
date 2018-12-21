@@ -6,7 +6,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
-import { ExpertHomePage } from '../pages/expert-home/expert-home';
+import { SkillExpertsPage } from '../pages/skill-experts/skill-experts';
 
 import { HttpModule } from '@angular/http';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -15,6 +15,7 @@ import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 import { ExpertServiceProvider } from '../providers/expert-service/expert-service';
 
 import { FCM } from '@ionic-native/fcm';
+import { SharedServiceProvider } from '../providers/shared-service/shared-service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { FCM } from '@ionic-native/fcm';
     HomePage,
     ListPage,
     LoginPage,
-    ExpertHomePage
+    SkillExpertsPage
   ],
   imports: [
     BrowserModule,
@@ -35,7 +36,7 @@ import { FCM } from '@ionic-native/fcm';
     HomePage,
     ListPage,
     LoginPage,
-    ExpertHomePage
+    SkillExpertsPage
   ],
   providers: [
     StatusBar,
@@ -43,7 +44,8 @@ import { FCM } from '@ionic-native/fcm';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthServiceProvider,
     ExpertServiceProvider,
-    FCM
+    FCM,
+    SharedServiceProvider
   ]
 })
 export class AppModule {}
